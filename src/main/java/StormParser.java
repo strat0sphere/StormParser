@@ -26,7 +26,7 @@ public class StormParser {
 
     void createMetricsMap(String experimentName, int setBefore, int setAfter)
     {
-        metricsMap = new HashMap<String, List<Tuple>>();
+        metricsMap = new LinkedHashMap<String, List<Tuple>>();
 
         metricsMap.put("totalEmitted", experimentMetrics.getTotalEmitted());
         metricsMap.put("totalTransferred", experimentMetrics.getTotalTransferred());
