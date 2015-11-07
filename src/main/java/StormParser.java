@@ -7,7 +7,7 @@ import java.util.*;
  */
 public class StormParser {
 
-    static final int TOTAL_RUNS = 13;
+    static final int TOTAL_RUNS = 5;
     private final String fileName;
 
     private Map<String, Map<String, List<Tuple>>> experimentMap; // Contains the map of results for "wordcount", "grep" etc
@@ -30,12 +30,34 @@ public class StormParser {
 
         metricsMap.put("totalEmitted", experimentMetrics.getTotalEmitted());
         metricsMap.put("totalTransferred", experimentMetrics.getTotalTransferred());
+        metricsMap.put("totalCompleteLatency", experimentMetrics.getTotalCompleteLatency());
+        metricsMap.put("totalAcked", experimentMetrics.getTotalAcked());
+        metricsMap.put("totalFailed", experimentMetrics.getTotalFailed());
+
+
+        metricsMap.put("ackerExecuteLatency", experimentMetrics.getAckerExecuteLatency());
+        metricsMap.put("ackerProcessLatency", experimentMetrics.getAckerProcessLatency());
+        metricsMap.put("ackerEmitted", experimentMetrics.getAckerEmitted());
+        metricsMap.put("ackerTransferred", experimentMetrics.getAckerTransferred());
+        metricsMap.put("ackerAcked", experimentMetrics.getAckerAcked());
+        metricsMap.put("ackerFailed", experimentMetrics.getAckerFailed());
+        metricsMap.put("ackerCapacity", experimentMetrics.getAckerCapacity());
+
         metricsMap.put("countExecuteLatency", experimentMetrics.getCountExecuteLatency());
         metricsMap.put("countProcessLatency", experimentMetrics.getCountProcessLatency());
         metricsMap.put("countEmitted", experimentMetrics.getCountEmitted());
+        metricsMap.put("countTransferred", experimentMetrics.getCountTransferred());
+        metricsMap.put("countAcked", experimentMetrics.getCountAcked());
+        metricsMap.put("countFailed", experimentMetrics.getCountFailed());
+        metricsMap.put("countCapacity", experimentMetrics.getCountCapacity());
+
         metricsMap.put("splitExecuteLatency", experimentMetrics.getSplitExecuteLatency());
         metricsMap.put("splitProcessLatency", experimentMetrics.getSplitProcessLatency());
         metricsMap.put("splitEmitted", experimentMetrics.getSplitEmitted());
+        metricsMap.put("splitTransferred", experimentMetrics.getSplitTransferred());
+        metricsMap.put("splitAcked", experimentMetrics.getSplitAcked());
+        metricsMap.put("splitFailed", experimentMetrics.getSplitFailed());
+        metricsMap.put("splitCapacity", experimentMetrics.getSplitCapacity());
 
         System.out.println("experimentName:" + experimentName + " before:" + setBefore + " after:" + setAfter);
 
@@ -46,12 +68,33 @@ public class StormParser {
     {
         experimentMetrics.getTotalTransferred().add(run, runMetrics.getTotalTransferredTuple());
         experimentMetrics.getTotalEmitted().add(run, runMetrics.getTotalEmittedTuple());
+        experimentMetrics.getTotalAcked().add(run, runMetrics.getTotalAckedTuple());
+        experimentMetrics.getTotalCompleteLatency().add(run, runMetrics.getTotalCompleteLatencyTuple());
+        experimentMetrics.getTotalFailed().add(run, runMetrics.getTotalFailedTuple());
+
+        experimentMetrics.getAckerExecuteLatency().add(run, runMetrics.getAckerExecuteLatencyTuple());
+        experimentMetrics.getAckerProcessLatency().add(run, runMetrics.getAckerProcessLatencyTuple());
+        experimentMetrics.getAckerEmitted().add(run, runMetrics.getAckerEmittedTuple());
+        experimentMetrics.getAckerTransferred().add(run, runMetrics.getAckerTransferredTuple());
+        experimentMetrics.getAckerAcked().add(run, runMetrics.getAckerAckedTuple());
+        experimentMetrics.getAckerFailed().add(run, runMetrics.getAckerFailedTuple());
+        experimentMetrics.getAckerCapacity().add(run, runMetrics.getAckerCapacityTuple());
+
         experimentMetrics.getCountExecuteLatency().add(run, runMetrics.getCountExecuteLatencyTuple());
         experimentMetrics.getCountProcessLatency().add(run, runMetrics.getCountProcessLatencyTuple());
         experimentMetrics.getCountEmitted().add(run, runMetrics.getCountEmittedTuple());
+        experimentMetrics.getCountTransferred().add(run, runMetrics.getCountTransferredTuple());
+        experimentMetrics.getCountAcked().add(run, runMetrics.getCountAckedTuple());
+        experimentMetrics.getCountFailed().add(run, runMetrics.getCountFailedTuple());
+        experimentMetrics.getCountCapacity().add(run, runMetrics.getCountCapacityTuple());
+
         experimentMetrics.getSplitExecuteLatency().add(run, runMetrics.getSplitExecuteLatencyTuple());
         experimentMetrics.getSplitProcessLatency().add(run, runMetrics.getSplitProcessLatencyTuple());
         experimentMetrics.getSplitEmitted().add(run, runMetrics.getSplitEmittedTuple());
+        experimentMetrics.getSplitTransferred().add(run, runMetrics.getSplitTransferredTuple());
+        experimentMetrics.getSplitAcked().add(run, runMetrics.getSplitAckedTuple());
+        experimentMetrics.getSplitFailed().add(run, runMetrics.getSplitFailedTuple());
+        experimentMetrics.getSplitCapacity().add(run, runMetrics.getSplitCapacityTuple());
     }
 
     void parseDocument() {
@@ -116,6 +159,7 @@ public class StormParser {
             }
 
             //When done reading the file create the metricsMap for the last experiment
+            System.out.println("Line:" + lineNo + " Creating map for experiment: " +experimentName);
             createExperimentMetrics(run, runMetrics);
             createMetricsMap(experimentName, setBefore, setAfter);
 
@@ -147,7 +191,9 @@ public class StormParser {
     }
     public static void main(String[] args)
     {
-       StormParser stormParser = new StormParser("/Users/stratos/Development/Results/BigData/results/storm-hadoop.txt");
+       // StormParser stormParser = new StormParser("/Users/stratos/Development/stratos-results/BigData/perf_eval/raw-data/euca-00/storm-hadoop-summer.txt");
+       // StormParser stormParser = new StormParser("/Users/stratos/Development/stratos-results/BigData/perf_eval/raw-data/euca-00/storm-spark-cg-summer.txt");
+        StormParser stormParser = new StormParser("/Users/stratos/Development/stratos-results/BigData/perf_eval/raw-data/eci/storm-spark-fg.txt");
 
         Map<String, Map<String, List<Tuple>>> experimentMap = stormParser.getExperimentMap();
 
